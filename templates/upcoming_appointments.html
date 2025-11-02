@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upcoming Appointments | UNO Tutoring Scheduler</title>
+  <link rel="stylesheet" href="{% static 'scheduler/style.css' %}">
+</head>
+<body>
+  <header>
+    <h1>UNO Tutoring Scheduler</h1>
+    <nav class="navbar">
+      <a href="{% url 'home' %}" class="nav-link">Home</a>
+      <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
+      <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
+      <a href="{% url 'upcoming_appointments' %}" class="nav-link">Appointments</a>
+      <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Upcoming Appointments</h2>
+      <p>This page will display upcoming appointments.</p>
+    </div>
+  </main>
+</body>
+</html>
