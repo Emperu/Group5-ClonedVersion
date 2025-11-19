@@ -14,12 +14,52 @@ header {
   padding: 20px 0;
   text-align: center;
   border-bottom: 5px solid #d6001c;
+  position: relative;
 }
+
+/* Login button positioning */
+.auth-buttons {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  background-color: #ffffff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
+}
+
+.user-greeting {
+  color: #000000;
+  font-size: 0.8rem;
+}
+
+.login-btn {
+  background-color: #d6001c;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 0.85rem;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+  box-shadow: none;
+}
+
+.login-btn:hover {
+  background-color: #b80018;
+  text-decoration: none;
+}
+
 
 h1 {
   font-size: 2.2rem;
   margin: 0;
   letter-spacing: 1px;
+  position: relative;
 }
 
 /* Content container */
@@ -86,4 +126,189 @@ footer {
   justify-content: center;
   gap: 1.2rem;
   margin-top: 0.5rem;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #d6001c;
+  box-shadow: 0 0 0 3px rgba(214, 0, 28, 0.1);
+}
+
+.form-group select {
+  cursor: pointer;
+  background-color: white;
+}
+
+/* Messages/Alerts styling */
+.messages {
+  margin-bottom: 1.5rem;
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left-color: #d6001c;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left-color: #28a745;
+}
+
+/* Tutor list styling */
+.tutor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tutor-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  transition: box-shadow 0.2s ease;
+}
+
+.tutor-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tutor-card h3 {
+  color: #d6001c;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.tutor-bio {
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.tutor-courses {
+  margin-bottom: 1rem;
+}
+
+.tutor-courses ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.tutor-courses li {
+  margin-bottom: 0.25rem;
+}
+
+.book-btn {
+  display: inline-block;
+  background-color: #d6001c;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.book-btn:hover {
+  background-color: #b80018;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* Booking cards styling */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.booking-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #fafafa;
+}
+
+.booking-card h3 {
+  color: #d6001c;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.booking-details p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.status-confirmed {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.status-cancelled {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* Form input types */
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input[type="date"]:focus,
+.form-group input[type="time"]:focus {
+  outline: none;
+  border-color: #d6001c;
+  box-shadow: 0 0 0 3px rgba(214, 0, 28, 0.1);
 }

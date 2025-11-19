@@ -2,6 +2,8 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
+
 
 
 # Base User Model
@@ -15,7 +17,20 @@ class User(models.Model):
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
     email = models.CharField(max_length=100, unique=True)
+    nuid = models.CharField(max_length=8, unique=True)  # Add NUID field
+    password = models.CharField(max_length=128)  # Add password field
     role = models.CharField(max_length=10, choices=[('student', 'Student'), ('tutor', 'Tutor'), ('admin', 'Admin')]) # Case insensitive
+
+    def set_password(self, raw_password):
+        """Hash and set the password"""
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        """Check if the provided password matches"""
+        return check_password(raw_password, self.password)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

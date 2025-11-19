@@ -8,7 +8,18 @@
 </head>
 <body>
   <header>
+
+      <div class="auth-buttons">
+      {% if request.session.user_id %}
+        <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
+        <a href="{% url 'logout' %}" class="login-btn">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% endif %}
+    </div>
+
     <h1>UNO Tutoring Scheduler</h1>
+
     <nav class="navbar">
         <a href="{% url 'home' %}" class="nav-link">Home</a>
         <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>

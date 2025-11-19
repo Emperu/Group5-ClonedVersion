@@ -8,6 +8,16 @@
 </head>
 <body>
   <header>
+
+      <div class="auth-buttons">
+      {% if request.session.user_id %}
+        <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
+        <a href="{% url 'logout' %}" class="login-btn">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% endif %}
+    </div>
+
     <h1>UNO Tutoring Scheduler</h1>
     <nav class="navbar">
       <a href="{% url 'home' %}" class="nav-link">Home</a>
@@ -19,9 +29,44 @@
   </header>
 
   <main>
-    <div class="card">
-      <h2>Browse Tutors by Course</h2>
-      <p>This page will allow students to view all available tutors.</p>
+    <div class="card" style="max-width: 900px;">
+      <h2>Browse Tutors</h2>
+      
+      {% if messages %}
+      <div class="messages">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if tutors %}
+        <div class="tutor-list">
+          {% for tutor in tutors %}
+          <div class="tutor-card">
+            <h3>{{ tutor.user.first_name }} {{ tutor.user.last_name }}</h3>
+            <p class="tutor-bio">{{ tutor.bio }}</p>
+            <div class="tutor-courses">
+              <strong>Courses:</strong>
+              {% if tutor.taught_courses.all %}
+                <ul>
+                  {% for course in tutor.taught_courses.all %}
+                  <li>{{ course.course_number }}: {{ course.title }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <span>No courses listed</span>
+              {% endif %}
+            </div>
+            <a href="{% url 'book_session' tutor.id %}" class="book-btn">Book Session</a>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No tutors available at this time.</p>
+      {% endif %}
     </div>
   </main>
 </body>

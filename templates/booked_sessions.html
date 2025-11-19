@@ -8,6 +8,16 @@
 </head>
 <body>
   <header>
+
+      <div class="auth-buttons">
+      {% if request.session.user_id %}
+        <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
+        <a href="{% url 'logout' %}" class="login-btn">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% endif %}
+    </div>
+
     <h1>UNO Tutoring Scheduler</h1>
     <nav class="navbar">
       <a href="{% url 'home' %}" class="nav-link">Home</a>
@@ -19,9 +29,46 @@
   </header>
 
   <main>
-    <div class="card">
-      <h2>View Booked Sessions</h2>
-      <p>This page will allow students to view information about their booked tutoring sessions.</p>
+    <div class="card" style="max-width: 900px;">
+      <h2>My Booked Sessions</h2>
+      
+      {% if messages %}
+      <div class="messages">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if bookings %}
+        <div class="bookings-list">
+          {% for booking in bookings %}
+          <div class="booking-card">
+            <h3>Session with {{ booking.tutor.user.first_name }} {{ booking.tutor.user.last_name }}</h3>
+            <div class="booking-details">
+              <p><strong>Course:</strong> 
+                {% if booking.course %}
+                  {{ booking.course.course_number }}: {{ booking.course.title }}
+                {% else %}
+                  No course specified
+                {% endif %}
+              </p>
+              <p><strong>Date & Time:</strong> {{ booking.start_ts|date:"F d, Y" }} at {{ booking.start_ts|date:"g:i A" }}</p>
+              <p><strong>End Time:</strong> {{ booking.end_ts|date:"g:i A" }}</p>
+              <p><strong>Location:</strong> {{ booking.location.location_name }} ({{ booking.location.modality }})</p>
+              {% if booking.location.join_link %}
+              <p><strong>Join Link:</strong> <a href="{{ booking.location.join_link }}" target="_blank">{{ booking.location.join_link }}</a></p>
+              {% endif %}
+              <p><strong>Status:</strong> <span class="status-{{ booking.status }}">{{ booking.status|title }}</span></p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>You don't have any booked sessions yet. <a href="{% url 'tutor_list' %}">Browse tutors</a> to book a session.</p>
+      {% endif %}
     </div>
   </main>
 </body>

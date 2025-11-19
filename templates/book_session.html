@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Session | UNO Tutoring Scheduler</title>
+  <link rel="stylesheet" href="{% static 'scheduler/style.css' %}">
+</head>
+<body>
+  <header>
+
+      <div class="auth-buttons">
+      {% if request.session.user_id %}
+        <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
+        <a href="{% url 'logout' %}" class="login-btn">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% endif %}
+    </div>
+
+    <h1>UNO Tutoring Scheduler</h1>
+    <nav class="navbar">
+      <a href="{% url 'home' %}" class="nav-link">Home</a>
+      <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
+      <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
+      <a href="{% url 'upcoming_appointments' %}" class="nav-link">Appointments</a>
+      <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card" style="max-width: 600px;">
+      <h2>Book a Session with {{ tutor.user.first_name }} {{ tutor.user.last_name }}</h2>
+      
+      {% if messages %}
+      <div class="messages">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="tutor-info" style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 6px;">
+        <p><strong>Bio:</strong> {{ tutor.bio }}</p>
+      </div>
+
+      <form method="POST">
+          {% csrf_token %}
+          
+          <div class="form-group">
+              <label for="course">Course *</label>
+              <select id="course" name="course" required>
+                  <option value="">-- Select Course --</option>
+                  {% for course in tutor_courses %}
+                  <option value="{{ course.id }}">{{ course.course_number }}: {{ course.title }}</option>
+                  {% endfor %}
+              </select>
+              {% if not tutor_courses %}
+              <small style="color: #d6001c;">This tutor has no courses available.</small>
+              {% endif %}
+          </div>
+
+          <div class="form-group">
+              <label for="location">Location *</label>
+              <select id="location" name="location" required>
+                  <option value="">-- Select Location --</option>
+                  {% for location in locations %}
+                  <option value="{{ location.id }}">{{ location.location_name }} ({{ location.modality }})</option>
+                  {% endfor %}
+              </select>
+              {% if not locations %}
+              <small style="color: #d6001c;">No locations available.</small>
+              {% endif %}
+          </div>
+
+          <div class="form-group">
+              <label for="start_date">Date *</label>
+              <input type="date" id="start_date" name="start_date" required min="{{ today|date:'Y-m-d' }}">
+          </div>
+
+          <div class="form-group">
+              <label for="start_time">Start Time *</label>
+              <input type="time" id="start_time" name="start_time" required>
+          </div>
+
+          <div class="form-group">
+              <label for="duration">Duration (minutes) *</label>
+              <select id="duration" name="duration" required>
+                  <option value="30">30 minutes</option>
+                  <option value="60" selected>60 minutes</option>
+                  <option value="90">90 minutes</option>
+                  <option value="120">120 minutes</option>
+              </select>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button type="submit">Book Session</button>
+              <a href="{% url 'tutor_list' %}" class="login-btn" style="display: inline-block; text-align: center; padding: 10px 18px;">Cancel</a>
+          </div>
+      </form>
+    </div>
+  </main>
+
+
+  <!-- Not sure if this is the most optimal way to do this, but for now I have this here to not let users select days before the current day -->
+  <script>
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('start_date');
+        if (dateInput) {
+            dateInput.setAttribute('min', today);
+        }
+    });
+  </script>
+</body>
+</html>
+
