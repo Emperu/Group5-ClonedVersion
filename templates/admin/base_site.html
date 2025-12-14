@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}MavTutoring Admin | {{ title }}{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <!-- Reuse your main site styles -->
+  <link rel="stylesheet" href="{% static 'scheduler/style.css' %}">
+  <style>
+    /* Admin-specific tweaks so it looks good with your stylesheet */
+
+    /* Change admin background to match your site */
+    body.login, body.dashboard, body.app-index {
+      background-color: #f4f4f4;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* Top header bar */
+    #header {
+      background-color: #000000;
+      border-bottom: 5px solid #d6001c;
+    }
+
+    #header h1, #header a, #header a:link, #header a:visited {
+      color: #ffffff;
+    }
+
+    /* Left sidebar */
+    #nav-sidebar {
+      background-color: #ffffff;
+    }
+
+    #nav-sidebar .module caption {
+      background-color: #d6001c;
+      color: #ffffff;
+    }
+
+    /* Primary buttons */
+    .button, input[type=submit], input[type=button], .submit-row input.default {
+      background-color: #d6001c;
+      border-color: #d6001c;
+      color: #ffffff;
+    }
+
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input.default:hover {
+      background-color: #b80018;
+      border-color: #b80018;
+    }
+
+    /* Table header colors */
+    .module caption, .module h2 {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    /* Optional: change link colors */
+    a {
+      color: #d6001c;
+    }
+
+    a:hover {
+      color: #b80018;
+    }
+  </style>
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">MavTutoring Admin</a>
+  </h1>
+{% endblock %}
+
+{% block nav-global %}
+  <!-- You can add a link back to the public site here -->
+  <a href="/" style="margin-right: 1rem; color: #fff; text-decoration: none;">Back to site</a>
+{% endblock %}

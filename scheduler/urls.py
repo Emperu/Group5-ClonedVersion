@@ -13,15 +13,15 @@ urlpatterns = [
     # Student-only routes
     path('booked-sessions/', views.booked_sessions, name='booked_sessions'),
     path('tutor-list/', views.tutor_list, name='tutor_list'),
-    path('book-session/<int:tutor_id>/', views.book_session, name='book_session'),
-    path('upcoming-appointments/', views.upcoming_appointments, name='upcoming_appointments'),
+    path('book-session/<int:tutor_id>/', views.book_session, name='book_session'), # <int:tutor_id> displays the specific tutor ID in the url
     path('cancel-reschedule/', views.cancel_reschedule, name='cancel_reschedule'),
 
     # Tutor-only routes
     path('tutor/dashboard/', views.tutor_dashboard, name='tutor_dashboard'),
     path('tutor/schedule/', views.tutor_schedule, name='tutor_schedule'),
     path('tutor/appointments/', views.tutor_appointments, name='tutor_appointments'),
-
+    path('tutor/accept-booking/<int:booking_id>/', views.accept_booking, name='accept_booking'), # Also displaying booking id for accept and reject views cuz I think its neat
+    path('tutor/reject-booking/<int:booking_id>/', views.reject_booking, name='reject_booking'),
     # Admin-only routes
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
 

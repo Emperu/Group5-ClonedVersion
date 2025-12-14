@@ -1,0 +1,45 @@
+{% if recipient == 'student' %}
+Hello {{ student.user.first_name }} {{ student.user.last_name }},
+
+Your booking request has been sent successfully. The tutor will review and confirm your appointment. You will recieve a confirmation email upon your requests acception or rejeciton.
+
+{% else %}
+Hello {{ tutor.user.first_name }} {{ tutor.user.last_name }},
+
+You have received a new booking request from {{ student.user.first_name }} {{ student.user.last_name }}.
+
+Please review this request.
+
+{% endif %}
+
+BOOKING REQUEST DETAILS:
+
+Date & Time: {{ booking.start_ts|date:"F d, Y" }} at {{ booking.start_ts|date:"g:i A" }} - {{ booking.end_ts|date:"g:i A" }}
+
+{% if recipient == 'student' %}
+Tutor: {{ tutor.user.first_name }} {{ tutor.user.last_name }}
+{% else %}
+Student: {{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.email }})
+{% endif %}
+
+{% if booking.course %}
+Course: {{ booking.course.course_number }}: {{ booking.course.title }}
+{% else %}
+Course: No course specified
+{% endif %}
+
+Location: {{ booking.location.location_name }} ({{ booking.location.modality }})
+{% if booking.location.join_link %}
+Join Link: {{ booking.location.join_link }}
+{% endif %}
+
+Status: {{ booking.status|title }} (Awaiting tutor approval)
+
+{% if recipient == 'student' %}
+You will receive another email once the tutor confirms your appointment.
+
+{% else %}
+Please log in to your tutor dashboard to accept or reject this request.
+{% endif %}
+
+MavTutoring

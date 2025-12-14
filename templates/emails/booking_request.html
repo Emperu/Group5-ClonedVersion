@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #d6001c;
+        }
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .details p {
+            margin: 8px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MavTutoring</h1>
+    </div>
+
+    <div class="content">
+        {% if recipient == 'student' %}
+        <h2>Hello {{ student.user.first_name }} {{ student.user.last_name }},</h2>
+        <p>Your booking request has been sent successfully. The tutor will review and confirm your appointment. You will receive a confirmation email upon your request's acceptance or rejection.</p>
+        {% else %}
+        <h2>Hello {{ tutor.user.first_name }} {{ tutor.user.last_name }},</h2>
+        <p>You have received a new booking request from <strong>{{ student.user.first_name }} {{ student.user.last_name }}</strong>.</p>
+        <p>Please review this request.</p>
+        {% endif %}
+
+        <div class="details">
+            <h3 style="margin-top: 0; color: #d6001c;">BOOKING REQUEST DETAILS</h3>
+
+            <p><strong>Date & Time:</strong><br>
+            {{ booking.start_ts|date:"F d, Y" }} at {{ booking.start_ts|date:"g:i A" }} - {{ booking.end_ts|date:"g:i A" }}</p>
+
+            {% if recipient == 'student' %}
+            <p><strong>Tutor:</strong> {{ tutor.user.first_name }} {{ tutor.user.last_name }}</p>
+            {% else %}
+            <p><strong>Student:</strong> {{ student.user.first_name }} {{ student.user.last_name }}<br>
+            <strong>Email:</strong> {{ student.user.email }}</p>
+            {% endif %}
+
+            <p><strong>Course:</strong><br>
+            {% if booking.course %}
+                {{ booking.course.course_number }}: {{ booking.course.title }}
+            {% else %}
+                No course specified
+            {% endif %}
+            </p>
+
+            <p><strong>Location:</strong> {{ booking.location.location_name }} ({{ booking.location.modality }})</p>
+
+            {% if booking.location.join_link %}
+            <p><strong>Join Link:</strong><br>
+            <a href="{{ booking.location.join_link }}" style="color: #d6001c;">{{ booking.location.join_link }}</a></p>
+            {% endif %}
+
+            <p><strong>Status:</strong> <span class="status-pending">{{ booking.status|title }}</span> (Awaiting tutor approval)</p>
+        </div>
+
+        {% if recipient == 'student' %}
+        <p>You will receive another email once the tutor confirms your appointment.</p>
+        {% else %}
+        <p>Please log in to your tutor dashboard to accept or reject this request.</p>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>MavTutoring<br>
+        This is an automated email. Please do not reply to this email.</p>
+    </div>
+</body>
+</html>

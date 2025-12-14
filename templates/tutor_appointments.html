@@ -3,12 +3,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Booked Sessions | UNO Tutoring Scheduler</title>
+  <title>My Appointments | UNO Tutoring Scheduler</title>
   <link rel="stylesheet" href="{% static 'scheduler/style.css' %}">
 </head>
 <body>
   <header>
-
       <div class="auth-buttons">
       {% if request.session.user_id %}
         <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
@@ -21,26 +20,17 @@
     <h1>UNO Tutoring Scheduler</h1>
     <nav class="navbar">
       <a href="{% url 'home' %}" class="nav-link">Home</a>
-      {% if request.session.user_role == 'student' %}
-        <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
-        <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
-        <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
-      {% elif request.session.user_role == 'tutor' %}
-        <a href="{% url 'tutor_dashboard' %}" class="nav-link">Dashboard</a>
+      {% if request.session.user_role == 'tutor' %}
         <a href="{% url 'tutor_appointments' %}" class="nav-link">Appointments</a>
         <a href="{% url 'tutor_schedule' %}" class="nav-link">Schedule</a>
-      {% elif request.session.user_role == 'admin' %}
-        <a href="{% url 'admin_dashboard' %}" class="nav-link">Admin Dashboard</a>
       {% endif %}
     </nav>
-
-
   </header>
 
   <main>
     <div class="card" style="max-width: 900px;">
-      <h2>My Booked Sessions</h2>
-      
+      <h2>My Appointments</h2>
+
       {% if messages %}
       <div class="messages">
           {% for message in messages %}
@@ -50,33 +40,62 @@
           {% endfor %}
       </div>
       {% endif %}
-<!-- Displays all booked sessions for the user -->
+
       {% if bookings %}
         <div class="bookings-list">
           {% for booking in bookings %}
           <div class="booking-card">
-            <h3>Session with {{ booking.tutor.user.first_name }} {{ booking.tutor.user.last_name }}</h3>
+            <h3>Session on {{ booking.start_ts|date:"F d, Y" }}</h3>
             <div class="booking-details">
-              <p><strong>Course:</strong> 
+              <p><strong>Time:</strong> {{ booking.start_ts|date:"g:i A" }} - {{ booking.end_ts|date:"g:i A" }}</p>
+
+              <p><strong>Students:</strong>
+                {% if booking.students.all %}
+                  {% for student in booking.students.all %}
+                    {{ student.user.first_name }} {{ student.user.last_name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                {% else %}
+                  No students assigned
+                {% endif %}
+              </p>
+
+              <p><strong>Course:</strong>
                 {% if booking.course %}
                   {{ booking.course.course_number }}: {{ booking.course.title }}
                 {% else %}
                   No course specified
                 {% endif %}
               </p>
-              <p><strong>Date & Time:</strong> {{ booking.start_ts|date:"F d, Y" }} at {{ booking.start_ts|date:"g:i A" }}</p>
-              <p><strong>End Time:</strong> {{ booking.end_ts|date:"g:i A" }}</p>
+
               <p><strong>Location:</strong> {{ booking.location.location_name }} ({{ booking.location.modality }})</p>
+
               {% if booking.location.join_link %}
               <p><strong>Join Link:</strong> <a href="{{ booking.location.join_link }}" target="_blank">{{ booking.location.join_link }}</a></p>
               {% endif %}
+
               <p><strong>Status:</strong> <span class="status-{{ booking.status }}">{{ booking.status|title }}</span></p>
+
+              <p><strong>Booked At:</strong> {{ booking.booked_at|date:"F d, Y g:i A" }}</p>
+
+              {% if booking.status == 'pending' %}
+              <form method="POST" action = "{% url 'accept_booking' booking.id %}">
+                  {%  csrf_token %}
+                  <button type="submit">Accept</button>
+              </form>
+
+            <form method="POST" action = "{% url 'reject_booking' booking.id %}">
+                  {%  csrf_token %}
+                  <button type="submit">Reject</button>
+              </form>
+
+            {% endif %}
+
             </div>
           </div>
           {% endfor %}
         </div>
       {% else %}
-        <p>You don't have any booked sessions yet. <a href="{% url 'tutor_list' %}">Browse tutors</a> to book a session.</p>
+        <p>You don't have any appointments scheduled yet.</p>
       {% endif %}
     </div>
   </main>

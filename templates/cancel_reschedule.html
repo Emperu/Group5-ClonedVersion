@@ -23,16 +23,59 @@
       <a href="{% url 'home' %}" class="nav-link">Home</a>
       <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
       <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
-      <a href="{% url 'upcoming_appointments' %}" class="nav-link">Appointments</a>
       <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
     </nav>
   </header>
 
-  <main>
-    <div class="card">
-      <h2>Cancel or Reschedule a Session</h2>
-      <p>This page will allow students to cancel or reschedule appointments.</p>
-    </div>
-  </main>
+<main>
+  <div class="card" style="max-width: 900px;">
+    <h2>Cancel or Reschedule a Session</h2>
+
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    {% if bookings %}
+      {% for booking in bookings %}
+        <div style="padding: 1rem; background: #fafafa; border-radius: 8px; margin-bottom: 1rem;">
+
+          <p><strong>Date:</strong> {{ booking.start_ts|date:"M d, Y" }}</p>
+          <p><strong>Time:</strong> {{ booking.start_ts|time:"g:i A" }} - {{ booking.end_ts|time:"g:i A" }}</p>
+          <p><strong>Tutor:</strong> {{ booking.tutor.user.first_name }} {{ booking.tutor.user.last_name }}</p>
+          <p><strong>Course:</strong> {{ booking.course.course_name }}</p>
+          <p><strong>Location:</strong> {{ booking.location.location_name }}</p>
+
+          <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+
+            <form method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="cancel">
+              <input type="hidden" name="booking_id" value="{{ booking.id }}">
+              <button type="submit" style="background-color: #dc3545;">
+                Cancel
+              </button>
+            </form>
+
+            <form method="POST" style="display:flex; gap: 0.5rem;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="reschedule">
+              <input type="hidden" name="booking_id" value="{{ booking.id }}">
+              <input type="date" name="new_date" required>
+              <input type="time" name="new_time" required>
+              <button type="submit">
+                Reschedule
+              </button>
+            </form>
+
+          </div>
+
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>You have no upcoming sessions to manage.</p>
+    {% endif %}
+  </div>
+</main>
+
 </body>
 </html>

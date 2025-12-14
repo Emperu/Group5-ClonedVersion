@@ -8,7 +8,6 @@
 </head>
 <body>
   <header>
-
       <div class="auth-buttons">
       {% if request.session.user_id %}
         <span class="user-greeting">Hello, {{ request.session.user_name }}!</span>
@@ -22,18 +21,43 @@
 
     <nav class="navbar">
         <a href="{% url 'home' %}" class="nav-link">Home</a>
-        <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
-        <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
-        <a href="{% url 'upcoming_appointments' %}" class="nav-link">Appointments</a>
-        <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
-  </nav>
+
+        <!-- Different navbar displayed depending on role of student, tutor, or admin -->
+        {% if request.session.user_role == 'student' %}
+          <a href="{% url 'booked_sessions' %}" class="nav-link">Booked Sessions</a>
+          <a href="{% url 'tutor_list' %}" class="nav-link">Browse Tutors</a>
+          <a href="{% url 'cancel_reschedule' %}" class="nav-link">Cancel/Reschedule</a>
+        {% elif request.session.user_role == 'tutor' %}
+          <a href="{% url 'tutor_appointments' %}" class="nav-link">Appointments</a>
+          <a href="{% url 'tutor_schedule' %}" class="nav-link">Schedule</a>
+        {% elif request.session.user_role == 'admin' %}
+          <a href="{% url 'admin_dashboard' %}" class="nav-link">Admin Dashboard</a>
+        {% endif %}
+    </nav>
   </header>
 
   <main>
-  <div class="card">
-    <h2>Welcome!</h2>
-    <p>Select an option above to manage your tutoring sessions.</p>
-  </div>
-</main>
+    <div class="card">
+      <h2>Welcome{% if request.session.user_name %}, {{ request.session.user_name }}{% endif %}!</h2>
+
+      {% if request.session.user_id %}
+        {% if request.session.user_role == 'student' %}
+          <p>Select an option above to manage your tutoring sessions.</p>
+        {% elif request.session.user_role == 'tutor' %}
+          <p>Manage your tutoring sessions and schedule.</p>
+        {% elif request.session.user_role == 'admin' %}
+          <p>Manage the tutoring system.</p>
+          <div style="margin-top: 1.5rem;">
+            <h3 style="color: #d6001c; margin-bottom: 0.5rem;">Quick Actions:</h3>
+            <ul style="line-height: 1.8;">
+              <li><a href="{% url 'admin_dashboard' %}">View admin dashboard</a></li>
+            </ul>
+          </div>
+        {% endif %}
+      {% else %}
+        <p>Please <a href="{% url 'login' %}">login</a> to access the tutoring scheduler.</p>
+      {% endif %}
+    </div>
+  </main>
 </body>
 </html>

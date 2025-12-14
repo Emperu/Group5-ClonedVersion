@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django import forms
-from .models import User, Student, Tutor, Course, Location, Booking
+from .models import User, Student, Tutor, Course, Location, Booking, TutorAvailability
+
+admin.site.site_header = "MavTutoring Administration"
+admin.site.site_title = "MavTutoring Admin Portal"
+admin.site.index_title = "Welcome to MavTutoring Scheduler"
 
 
 class UserAdminForm(forms.ModelForm):
@@ -36,3 +40,4 @@ admin.site.register(Tutor)
 admin.site.register(Course)
 admin.site.register(Location)
 admin.site.register(Booking)
+admin.site.register(TutorAvailability)

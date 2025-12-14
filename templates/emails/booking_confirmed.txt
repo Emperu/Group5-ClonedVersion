@@ -1,0 +1,46 @@
+{% if recipient == 'student' %}
+Hello {{ student.user.first_name }} {{ student.user.last_name }},
+
+Your booking request has been confirmed by the tutor.
+
+{% else %}
+Hello {{ tutor.user.first_name }} {{ tutor.user.last_name }},
+
+You have confirmed a booking request. The student(s) have been notified.
+
+{% endif %}
+
+CONFIRMED APPOINTMENT DETAILS:
+
+Date & Time: {{ booking.start_ts|date:"F d, Y" }} at {{ booking.start_ts|date:"g:i A" }} - {{ booking.end_ts|date:"g:i A" }}
+
+{% if recipient == 'student' %}
+Tutor: {{ tutor.user.first_name }} {{ tutor.user.last_name }}
+{% else %}
+Students:
+{% for student_name in students_list %}
+  - {{ student_name }}
+{% endfor %}
+{% endif %}
+
+{% if booking.course %}
+Course: {{ booking.course.course_number }}: {{ booking.course.title }}
+{% else %}
+Course: No course specified
+{% endif %}
+
+Location: {{ booking.location.location_name }} ({{ booking.location.modality }})
+{% if booking.location.join_link %}
+Join Link: {{ booking.location.join_link }}
+{% endif %}
+
+Status: {{ booking.status|title }}
+
+{% if recipient == 'student' %}
+We look forward to seeing you at your tutoring session!
+
+{% else %}
+The student(s) have been notified of the confirmation.
+{% endif %}
+
+MavTutoring

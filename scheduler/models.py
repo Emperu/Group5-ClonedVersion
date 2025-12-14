@@ -110,3 +110,29 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking {self.id} with {self.tutor.user.first_name}"
+
+# Tutor availability model for tutors to set availbility, determining when students can book with them
+
+class TutorAvailability(models.Model):
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name = 'availability_slots')
+
+    day_of_week = models.IntegerField(choices=[
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    ])
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = 'Tutor Availability'
+        unique_together = ['tutor', 'day_of_week', 'start_time', 'end_time']
+
+    def __str__(self):
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        return f"{self.tutor.user.first_name} - {days[self.day_of_week]} {self.start_time} to {self.end_time}"
